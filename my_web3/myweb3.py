@@ -63,7 +63,7 @@ class MyWeb3:
         if self.private_key is not None:
             self.address = Web3.to_checksum_address(self.w3.eth.account.from_key(private_key=private_key).address)
         else:
-            self.address: str = self.address_zero
+            self.address = Web3.to_checksum_address(self.address_zero)
 
     async def is_connected(self, ) -> Tuple[int, Union[bool, Exception]]:
         """Checks the connection status of the Ethereum client."""
