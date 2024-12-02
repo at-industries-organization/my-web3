@@ -14,7 +14,7 @@ import asyncio
 from my_web3 import MyWeb3, BASE
 ```
 
-### Создание объекта класса MyWeb3
+### Создание объекта класса `MyWeb3`
 Создаем объект нашего класса MyWeb3, у которого мы будем вызывать необходимые нам методы.
 ```python
 my_web3 = MyWeb3(
