@@ -14,12 +14,21 @@ import asyncio
 from my_web3 import MyWeb3, BASE
 ```
 
+### Создание объекта класса MyWeb3
+Создаем объект нашего класса MyWeb3, у которого мы будем вызывать необходимые нам методы.
+```python
+my_web3 = MyWeb3(
+    network=BASE,
+    private_key='1234567890123456789012345678901234567890123456789012345678901234',
+    async_provider=True,
+)
+```
+
 ### Пример использования функции `is_connected`
 Метод `is_connected` проверяет статус подключения к Ethereum клиенту и возвращает кортеж, содержащий код статуса и результат проверки подключения.
 ```python
 async def foo():
-    w3 = MyWeb3(network=BASE)
-    status, result = await w3.is_connected()
+    status, result = await my_web3.is_connected()
     if status == 0:
         print(f'Connection: {result}')
     else:
