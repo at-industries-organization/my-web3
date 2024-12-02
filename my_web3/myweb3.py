@@ -37,13 +37,12 @@ class MyWeb3:
             gas_increase_base: Optional[float] = None,
     ):
         """
-        my_web3 is a convenient library for interacting with blockchain.
+        MyWeb3 is a convenient library for interacting with EVM blockchains via Python.
+        For more details about web3 library, refer to the Web3 Documentation: https://web3py.readthedocs.io/en/stable/index.html
 
         Almost all class methods (except utility functions) return tuples, with an integer status as the first element:
         - `0`: Success status (indicates the method completed successfully; the second element in the tuple contains the result)
         - `-1`: Error status (indicates the method failed; the second element in the tuple contains an error message)
-
-        For more details, refer to the Documentation: https://github.com/at-industries-organization/my-web3
 
         :param network: The network to connect to (e.g., Ethereum, BSC, Base)
         :param private_key: The secret key of your wallet, used for signing transactions.
