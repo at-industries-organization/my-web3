@@ -1,31 +1,24 @@
 # MyWeb3
-*вводная инфа про библиотеку*
+*MyWeb3 - это утилитарная библиотека для работы с EVM сетями в Python.*
+
 ## Пример кода
 ### Импорт библиотек
-Перед началом импортируем класс `MyWeb3`, словарь `NETWORKS_DICT` с объектами класса `Network` и библиотеку `asyncio` для запуска асинхронных функций.
+Перед началом импортируем библиотеку `asyncio` для запуска асинхронных функций, класс `MyWeb3` и сеть `BASE`, с которой мы будем работать.
 ```python
-from my_web3 import MyWeb3, NETWORKS_DICT
 import asyncio
+from my_web3 import MyWeb3, BASE
 ```
+
 ### Пример использования функции `is_connected`
 Метод `is_connected` проверяет статус подключения к Ethereum клиенту и возвращает кортеж, содержащий код статуса и результат проверки подключения.
-
-
-
-
 ```python
 async def foo():
-    # Creates an object of MyWeb3
-    w3 = MyWeb3(network=NETWORKS_DICT['Base'])
-
-    # Checks the connection status of the Ethereum client
+    w3 = MyWeb3(network=BASE)
     status, result = await w3.is_connected()
-
     if status == 0:
         print(f'Connection: {result}')
     else:
         print(f'Error while checking connection: {result}')
 
-# run function
 asyncio.run(foo())
 ```
