@@ -26,7 +26,7 @@ async def example_01():
     if status == 0:
         print(f'01 | Balance: {result}')
     else:
-        print(f'02 | Error while getting balance: {result}')
+        print(f'01 | Error while getting balance: {result}')
 
 asyncio.run(example_01())
 
