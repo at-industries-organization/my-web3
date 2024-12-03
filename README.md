@@ -27,12 +27,43 @@ my_web3 = MyWeb3(
 ### Пример использования функции `is_connected`
 Метод `is_connected` проверяет статус подключения к Ethereum клиенту и возвращает кортеж, содержащий код статуса и результат проверки подключения.
 ```python
-async def foo():
+async def example_00():
     status, result = await my_web3.is_connected()
     if status == 0:
-        print(f'Connection: {result}')
+        print(f'00 | Connection: {result}')
     else:
-        print(f'Error while checking connection: {result}')
+        print(f'00 | Error while checking connection: {result}')
 
-asyncio.run(foo())
+asyncio.run(example_00())
+```
+
+### Пример использования функции `get_balance`
+Метод `get_balance` возвращает баланс кошелька в нативной монете сети. Если в функцию передан `address_wallet`, метод вернет баланс этого адреса. Если аргумент не указан, будет возвращен баланс кошелька, для которого создан экземпляр класса `MyWeb3`.
+```python
+async def example_01():
+    status, result = await my_web3.get_balance(
+        address_wallet='0x2e988A386a799F506693793c6A5AF6B54dfAaBfB',
+    )
+    if status == 0:
+        print(f'01 | Balance: {result}')
+    else:
+        print(f'02 | Error while getting balance: {result}')
+
+asyncio.run(example_01())
+```
+
+### Пример использования функции `transfer_percent`
+Метод `transfer_percent` переводит указанный процент от текущего баланса нативной монеты на кошелек `address_recipient`. В нашем примере мы переведем 10% от всего баланса нативной монеты с кошелька, для которого создан экземпляр класса `MyWeb3`, на кошелек с адресом `0xB293cFf00bA3f110C839fBDB59186BD944B144D5`.
+```python
+async def example_02():
+    status, result = await my_web3.transfer_percent(
+        address_recipient='0xB293cFf00bA3f110C839fBDB59186BD944B144D5',
+        percent=10,
+    )
+    if status == 0:
+        print(f'02 | Balance: {result}')
+    else:
+        print(f'02 | Error while getting balance: {result}')
+
+asyncio.run(example_02())
 ```
