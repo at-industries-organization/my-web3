@@ -107,8 +107,7 @@ class MyWeb3:
                     else:
                         return -1, Exception(f'{log_process} | eth |{result}')
             nonce = await afh(self.w3.eth.get_transaction_count, self.async_provider, self.address)
-            chain_id = self.w3.eth.chain_id
-
+            chain_id = await self.w3.eth.chain_id if self.async_provider else self.w3.eth.chain_id
             tx = {
                 'from': self._get_address_wallet(address_wallet=address_from),
                 'nonce': nonce,
@@ -124,18 +123,15 @@ class MyWeb3:
             else:
                 if (self.tx_type == LEGACY) or (self.network.tx_type == LEGACY):
                     tx['gasPrice'] = self.w3.eth.gas_price
-
                 else:
-                    maxPriorityFeePerGas, maxFeePerGas = await self._get_EIP_1559_gas_price_parameters(
-                        self.gas_increase_base)
+                    maxPriorityFeePerGas, maxFeePerGas = await self._get_EIP_1559_gas_price_parameters(self.gas_increase_base)
                     tx['maxPriorityFeePerGas'] = maxPriorityFeePerGas
                     tx['maxFeePerGas'] = maxFeePerGas
             try:
                 if gas:
                     gas_estimated = gas
                 else:
-                    gas_estimated = self.w3.eth.estimate_gas(tx)
-
+                    gas_estimated = await afh(self.w3.eth.estimate_gas, self.async_provider, tx)
                     if self.gas_increase_gas:
                         gas_estimated *= self.gas_increase_gas
                 tx['gas'] = int(gas_estimated)
@@ -143,7 +139,6 @@ class MyWeb3:
                 return -1, Exception(f'{log_process} | gas | {e}')
             sign = await afh(self.w3.eth.account.sign_transaction, self.async_provider, tx, self.private_key)
             transaction_hash = await afh(self.w3.eth.send_raw_transaction, self.async_provider, sign.rawTransaction)
-
             return 0, transaction_hash
         except Exception as e:
             return -1, Exception(f'{log_process} | {e}')
@@ -419,8 +414,7 @@ class MyWeb3:
         except Exception as e:
             return -1, Exception(f'{log_process} | {e}')
 
-    def _get_w3(self, network: Network, proxy: Optional[str] = None, async_provider: Optional[bool] = False,
-                poa_middleware: Optional[bool] = None) -> Web3:
+    def _get_w3(self, network: Network, proxy: Optional[str] = None, async_provider: Optional[bool] = False, poa_middleware: Optional[bool] = None) -> Web3:
         if not async_provider:
             if proxy is not None:
                 w3 = Web3(
@@ -468,10 +462,9 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def _get_EIP_1559_gas_price_parameters(self, gas_increase_base: Optional[float] = None) -> Tuple[int, int]:
-        w3 = self._get_w3(network=self.network, proxy=self.proxy, poa_middleware=True,
-                          async_provider=self.async_provider)
-        base_fee_per_gas = (await afh(w3.eth.get_block, self.async_provider, 'latest'))['baseFeePerGas']
-        max_priority_fee_per_gas = int(await afh(w3.eth.max_priority_fee, self.async_provider))
+        w3 = self._get_w3(network=self.network, proxy=self.proxy, poa_middleware=True, async_provider=False)
+        base_fee_per_gas = w3.eth.get_block('latest')['baseFeePerGas']
+        max_priority_fee_per_gas = int(w3.eth.max_priority_fee)
         if gas_increase_base is not None:
             max_fee_per_gas = max_priority_fee_per_gas + int(base_fee_per_gas * gas_increase_base)
         else:
