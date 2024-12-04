@@ -2,7 +2,10 @@ from . import utils
 from .utils import afh
 from .constants import *
 from .models.token import *
+from .models.wallet import *
 
+from eth_account import Account
+from mnemonic import Mnemonic
 from typing import Union, Optional, Tuple
 from web3.eth import Contract, AsyncEth
 from web3.types import HexBytes, ChecksumAddress
@@ -357,6 +360,15 @@ class MyWeb3:
                 return -1, Exception(f'{log_process} | {result}')
         except Exception as e:
             return -1, Exception(f'{log_process} | {e}')
+
+    @staticmethod
+    def generate_wallet() -> Wallet:
+        """Generates a new wallet with seed_phrase, private_key and address."""
+        Account.enable_unaudited_hdwallet_features()
+        mnemo = Mnemonic("english")
+        seed_phrase = mnemo.generate(128)
+        account = Account.from_mnemonic(seed_phrase)
+        return Wallet(seed_phrase=str(seed_phrase), private_key=str(account.key.hex()), address=str(account.address))
 
     def _get_w3(self, network: Network, proxy: Optional[str] = None, async_provider: Optional[bool] = False, poa_middleware: Optional[bool] = None) -> Web3:
         if not async_provider:

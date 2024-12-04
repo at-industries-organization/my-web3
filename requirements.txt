@@ -1,1 +1,3 @@
 web3==6.14.0
+eth-account==0.11.3
+mnemonic==0.21
