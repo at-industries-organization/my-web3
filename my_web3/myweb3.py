@@ -136,7 +136,7 @@ class MyWeb3:
                 tx['gas'] = int(gas_estimated)
             except Exception as e:
                 return -1, Exception(f'{log_process} | gas | {e}')
-            sign = await afh(self.w3.eth.account.sign_transaction, self.async_provider, tx, self.private_key)
+            sign = self.w3.eth.account.sign_transaction(tx, self.private_key)
             transaction_hash = await afh(self.w3.eth.send_raw_transaction, self.async_provider, sign.rawTransaction)
             return 0, transaction_hash
         except Exception as e:
@@ -270,8 +270,17 @@ class MyWeb3:
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             contract = self._get_contract_ERC20(address_token)
-            data_transaction = afh(contract.encodeABI, self.async_provider, fn_name='approve', args=(Web3.to_checksum_address(address_spender), amount))
-            status, result = afh(self.send_transaction, self.async_provider, address_to=address_token, data=data_transaction)
+            data_transaction = contract.encodeABI(
+                fn_name='approve',
+                args=(
+                    Web3.to_checksum_address(address_spender),
+                    amount,
+                ),
+            )
+            status, result = await self.send_transaction(
+                address_to=address_token,
+                data=data_transaction,
+            )
             if status == 0:
                 return 0, result
             else:
@@ -313,14 +322,12 @@ class MyWeb3:
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             contract = self._get_contract_ERC20(address_token)
-            data_transaction = await afh(
-                contract.encodeABI,
-                self.async_provider,
+            data_transaction = contract.encodeABI(
                 fn_name='transfer',
                 args=(
                     Web3.to_checksum_address(address_recipient),
                     amount,
-                )
+                ),
             )
             status, result = await self.send_transaction(
                 address_to=address_token,
@@ -374,7 +381,7 @@ class MyWeb3:
                         request_kwargs={
                             'proxies': {
                                 'http': f'http://{proxy}',
-                                'https': f'http://{proxy}'
+                                'https': f'http://{proxy}',
                             }
                         },
                     ),
@@ -389,7 +396,7 @@ class MyWeb3:
             w3 = Web3(
                 provider=Web3.AsyncHTTPProvider(endpoint_uri=network.rpc),
                 modules={"eth": (AsyncEth,)},
-                middlewares=[]
+                middlewares=[],
             )
         if poa_middleware is not None:
             w3.middleware_onion.inject(geth_poa_middleware, layer=0)
