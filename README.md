@@ -55,7 +55,7 @@ my_web3 = MyWeb3(
 )
 ```
 
-### Пример использования функции `is_connected`
+### Пример использования метода `is_connected`
 Метод `is_connected` проверяет статус подключения к RPC блокчейна и возвращает кортеж, содержащий код статуса и результат проверки подключения.
 ```python
 async def example_00():
@@ -68,7 +68,7 @@ async def example_00():
 asyncio.run(example_00())
 ```
 
-### Пример использования функции `get_balance`
+### Пример использования метода `get_balance`
 Метод `get_balance` возвращает баланс кошелька (в нативной монете сети). Если в функцию передан `address_wallet`, метод вернет баланс этого адреса. Если аргумент не указан, будет возвращен баланс кошелька экземпляра класса `MyWeb3`.
 ```python
 async def example_01():
@@ -83,7 +83,7 @@ async def example_01():
 asyncio.run(example_01())
 ```
 
-### Пример использования функции `transfer_percent`
+### Пример использования метода `transfer_percent`
 Метод `transfer_percent` переводит указанный процент баланса на адрес `address_recipient`. Например, в нашем примере `10%` баланса будут отправлены на адрес `0xB293cFf00bA3f110C839fBDB59186BD944B144D5`.
 ```python
 async def example_02():
@@ -99,7 +99,7 @@ async def example_02():
 asyncio.run(example_02())
 ```
 
-### Пример использования функции `ERC20_get_balance`
+### Пример использования метода `ERC20_get_balance`
 Метод `ERC20_get_balance` получает баланс ERC20 токенов на кошельке. В нашем примере мы получаем баланс токена `USDC` на кошельке `0x2e988A386a799F506693793c6A5AF6B54dfAaBfB`.
 ```python
 async def example_03():
@@ -115,7 +115,7 @@ async def example_03():
 asyncio.run(example_03())
 ```
 
-### Пример использования функции `ERC20_get_decimals`
+### Пример использования метода `ERC20_get_decimals`
 Метод `ERC20_get_decimals` получает `decimals` введенного ERC20 токена. В нашем случае мы получаем `decimals` токена `USDC` в сети `BASE`.
 ```python
 async def example_04():
@@ -130,7 +130,7 @@ async def example_04():
 asyncio.run(example_04())
 ```
 
-### Пример использования функции `ERC20_approve`
+### Пример использования метода `ERC20_approve`
 Метод `ERC20_approve` делает `approve` ERC20 токенов. В нашем примере, мы делаем `approve` одного токена `USDC`, разрешая адресу `0x2626664c2603336E57B271c5C0b26F421741e481` списывать наши токены.
 ```python
 async def example_05():
