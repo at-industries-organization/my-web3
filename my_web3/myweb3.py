@@ -358,20 +358,6 @@ class MyWeb3:
         except Exception as e:
             return -1, Exception(f'{log_process} | {e}')
 
-    async def ERC20_create_token(self, address_token: str) -> Tuple[int, Union[Token, Exception]]:
-        """Creates an object of the Token class based on the provided ERC20 token address."""
-        log_process = inspect.currentframe().f_code.co_name
-        try:
-            address_token = Web3.to_checksum_address(address_token)
-            contract = self._get_contract_ERC20(address_token=address_token)
-            name = await afh(contract.functions.name().call, self.async_provider)
-            decimals = await afh(contract.functions.decimals().call, self.async_provider)
-            address_dict = {self.network: address_token}
-            token = Token(name=name, decimals=decimals, addresses=address_dict)
-            return 0, token
-        except Exception as e:
-            return -1, Exception(f'{log_process} | {e}')
-
     def _get_w3(self, network: Network, proxy: Optional[str] = None, async_provider: Optional[bool] = False, poa_middleware: Optional[bool] = None) -> Web3:
         if not async_provider:
             if proxy is not None:
