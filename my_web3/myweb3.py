@@ -83,7 +83,6 @@ class MyWeb3:
         try:
             address_wallet = self._get_address_wallet(address_wallet=address_wallet)
             return 0, int(await afh(self.w3.eth.get_balance, self.async_provider, address_wallet))
-
         except Exception as e:
             return -1, Exception(f'{log_process} | {e}')
 
@@ -148,7 +147,6 @@ class MyWeb3:
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             data = await afh(self.w3.eth.wait_for_transaction_receipt, self.async_provider, transaction_hash=transaction_hash, timeout=self.timeout)
-
             if ('status' in data) and (data['status'] == 1):
                 return 0, True
             else:
@@ -186,8 +184,7 @@ class MyWeb3:
                     amount = balance
                     while True:
                         if amount > 0:
-                            status, result = await self.transfer_amount(address_recipient=address_recipient,
-                                                                        amount=amount)
+                            status, result = await self.transfer_amount(address_recipient=address_recipient, amount=amount)
                             if status == 0:
                                 return 0, result
                             else:
@@ -238,7 +235,6 @@ class MyWeb3:
         try:
             token_contract = self._get_contract_ERC20(address_token)
             return 0, await afh(token_contract.functions.name().call, self.async_provider)
-
         except Exception as e:
             return -1, Exception(f'{log_process} | {e}')
 
@@ -265,7 +261,6 @@ class MyWeb3:
             contract = self._get_contract_ERC20(address_token)
             address_wallet = self._get_address_wallet(address_wallet)
             return 0, await afh(contract.functions.balanceOf(address_wallet).call, self.async_provider)
-
         except Exception as e:
             return -1, Exception(f'{log_process} | {e}')
 
@@ -282,7 +277,6 @@ class MyWeb3:
             address_wallet = self._get_address_wallet(address_wallet=address_wallet)
             address_spender = Web3.to_checksum_address(address_spender)
             return 0, await afh(contract.functions.allowance(address_wallet, address_spender).call, self.async_provider)
-
         except Exception as e:
             return -1, Exception(f'{log_process} | {e}')
 
@@ -296,11 +290,8 @@ class MyWeb3:
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             contract = self._get_contract_ERC20(address_token)
-            data_transaction = afh(contract.encodeABI, self.async_provider,
-                                   fn_name='approve', args=(Web3.to_checksum_address(address_spender), amount))
-
+            data_transaction = afh(contract.encodeABI, self.async_provider, fn_name='approve', args=(Web3.to_checksum_address(address_spender), amount))
             status, result = afh(self.send_transaction, self.async_provider, address_to=address_token, data=data_transaction)
-
             if status == 0:
                 return 0, result
             else:
@@ -317,8 +308,7 @@ class MyWeb3:
         """Checks allowance and balance and approves a specified amount of an ERC20 token for a spender address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
-            status, result = await self.ERC20_get_allowance(address_token=address_token,
-                                                            address_spender=address_spender)
+            status, result = await self.ERC20_get_allowance(address_token=address_token, address_spender=address_spender)
             if status == 0:
                 allowance: int = result
                 status, result = await self.ERC20_get_balance(address_token=address_token)
@@ -329,9 +319,7 @@ class MyWeb3:
                             amount = balance
                         if allowance >= amount:
                             return 0, HexBytes(0)
-                        status, result = await self.ERC20_approve(
-                            address_token=address_token, address_spender=address_spender, amount=amount,
-                        )
+                        status, result = await self.ERC20_approve(address_token=address_token, address_spender=address_spender, amount=amount)
                         if status == 0:
                             return 0, result
                         else:
@@ -388,9 +376,7 @@ class MyWeb3:
             if status == 0:
                 balance: int = result
                 amount = int(balance * (percent / 100))
-                status, result = await self.ERC20_transfer_amount(
-                    address_token=address_token, address_recipient=address_recipient, amount=amount,
-                )
+                status, result = await self.ERC20_transfer_amount(address_token=address_token, address_recipient=address_recipient, amount=amount)
                 if status == 0:
                     return 0, result
                 else:
