@@ -44,13 +44,13 @@ class MyWeb3:
         - `0`: Success status (indicates the method completed successfully; the second element in the tuple contains the result)
         - `-1`: Error status (indicates the method failed; the second element in the tuple contains an error message)
 
-        :param network: The network to connect to (e.g., Ethereum, BSC, Base)
-        :param private_key: The secret key of your wallet, used for signing transactions.
-        :param async_provider: If True, enables asynchronous operation for functions.
-        :param proxy: Proxy server address, used to change the API endpoint.
-        :param gas_eth_max: Maximum amount of ETH that can be spent on gas for transactions.
-        :param gas_increase_gas: A multiplier to increase the estimated gas for transactions.
-        :param gas_increase_base: A base value for gas increase calculations.
+        :param network: Instance of the `Network` class (from `my_web3/models/network.py`), specifying the target blockchain (e.g., ETHEREUM, BSC, BASE).
+        :param private_key: Wallet's private key (used for signing transactions).
+        :param async_provider: Enables asynchronous operations.
+        :param proxy: Proxy server address for redirecting API requests. Note: incompatible with `async_provider=True`.
+        :param gas_eth_max: Maximum gas price (in Gwei) for Ethereum transactions. If the network gas price exceeds this value, the code will wait.
+        :param gas_increase_gas: Multiplier applied to the estimated gas for transaction execution.
+        :param gas_increase_base: Multiplier applied base_fee_per_gas value while estimating EIP-1559 transactions gas.
         """
         self.private_key = private_key
         self.network = network
