@@ -69,7 +69,7 @@ class MyWeb3:
             self.address = Web3.to_checksum_address(self.address_zero)
 
     async def is_connected(self, ) -> Tuple[int, Union[bool, Exception]]:
-        """Checks the connection status of the Ethereum client."""
+        """Checks the connection to the network RPC."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             connection = await afh(self.w3.is_connected, self.async_provider)
@@ -81,7 +81,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def get_balance(self, address_wallet: Optional[str] = None) -> Tuple[int, Union[int, Exception]]:
-        """Retrieves the balance of a specified Ethereum wallet address."""
+        """Gets the balance of wallet address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             address_wallet = self._get_address_wallet(address_wallet=address_wallet)
@@ -95,7 +95,7 @@ class MyWeb3:
             address_from: Optional[str] = None,
             data=None, value=None, gas_price=None, gas=None,
     ) -> Tuple[int, Union[HexBytes, Exception]]:
-        """Facilitates sending a transaction on the Ethereum blockchain"""
+        """Sends transactions on the blockchain"""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             if (self.network.coin == ETH) and (self.max_eth_gwei is not None):
@@ -146,7 +146,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def verify_transaction(self, transaction_hash: HexBytes) -> Tuple[int, Union[bool, Exception]]:
-        """Checks the status of a blockchain transaction using its hash."""
+        """Checks the status of a transaction using its hash."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             data = await afh(self.w3.eth.wait_for_transaction_receipt, self.async_provider, transaction_hash=transaction_hash, timeout=self.timeout)
@@ -158,7 +158,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def transfer_amount(self, address_recipient: str, amount: int) -> Tuple[int, Union[HexBytes, Exception]]:
-        """Transfers a specified amount of the caller's balance to a designated recipient address."""
+        """Transfers a specified amount of balance to a recipient address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             status, result = await self.send_transaction(address_to=address_recipient, value=amount)
@@ -170,7 +170,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def transfer_percent(self, address_recipient: str, percent: float) -> Tuple[int, Union[HexBytes, Exception]]:
-        """Transfers a specified percentage of the caller's balance to a designated recipient address."""
+        """Transfers a specified percentage of the balance to a recipient address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             status, result = await self.get_balance()
@@ -206,7 +206,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def ERC20_get_balance(self, address_token: str, address_wallet: Optional[str] = None) -> Tuple[int, Union[int, Exception]]:
-        """Retrieves the balance of a specified ERC20 token for a given wallet address."""
+        """Gets the balance of a specified ERC20 token."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             contract = self._get_contract_ERC20(address_token)
@@ -216,7 +216,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def ERC20_get_allowance(self, address_token: str, address_spender: str, address_wallet: Optional[str] = None) -> Tuple[int, Union[int, Exception]]:
-        """Retrieves the allowance amount that a specified spender is allowed to withdraw from a given wallet for a specific ERC20 token."""
+        """Gets the allowance amount that a spender is allowed to withdraw from a given wallet for a specific ERC20 token."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             contract = self._get_contract_ERC20(address_token=address_token)
@@ -227,7 +227,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def ERC20_get_decimals(self, address_token: str) -> Tuple[int, Union[int, Exception]]:
-        """Retrieves decimals of an ERC20 token from blockchain based on its address."""
+        """Gets decimals of an ERC20 token from blockchain based on its address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             token_contract = self._get_contract_ERC20(address_token)
@@ -236,7 +236,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def ERC20_get_decimals_smart(self, address_token: str) -> Tuple[int, Union[int, Exception]]:
-        """Retrieves decimals of an ERC20 token from internal token dict and blockchain based on its address."""
+        """Gets decimals of an ERC20 token from internal token dict and blockchain based on its address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         for token in TOKENS_LIST:
             if address_token == token.addresses[self.network]:
@@ -248,7 +248,7 @@ class MyWeb3:
             return 0, result
 
     async def ERC20_get_symbol(self, address_token: str) -> Tuple[int, Union[str, Exception]]:
-        """Retrieves the symbol of an ERC20 token from blockchain based on its address."""
+        """Gets the symbol of an ERC20 token from blockchain based on its address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             token_contract = self._get_contract_ERC20(address_token)
@@ -257,7 +257,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def ERC20_get_symbol_smart(self, address_token: str) -> Tuple[int, Union[str, Exception]]:
-        """Retrieves the symbol of an ERC20 token from internal token dict and blockchain based on its address."""
+        """Gets the symbol of an ERC20 token from internal token dict and blockchain based on its address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         for token in TOKENS_LIST:
             if address_token == token.addresses[self.network]:
@@ -321,7 +321,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def ERC20_transfer_amount(self, amount: int, address_token: str, address_recipient: str) -> Tuple[int, Union[HexBytes, Exception]]:
-        """Transfers an amount of an ERC20 token balance from the caller's address to a specified recipient address."""
+        """Transfers an amount of an ERC20 token balance from the address to a specified recipient address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             contract = self._get_contract_ERC20(address_token)
@@ -344,7 +344,7 @@ class MyWeb3:
             return -1, Exception(f'{log_process} | {e}')
 
     async def ERC20_transfer_percent(self, percent: float, address_token: str, address_recipient: str) -> Tuple[int, Union[HexBytes, Exception]]:
-        """Transfers a percentage of an ERC20 token balance from the caller's address to a specified recipient address."""
+        """Transfers a percentage of an ERC20 token balance from the address to a specified recipient address."""
         log_process = f'{inspect.currentframe().f_code.co_name}'
         try:
             status, result = await self.ERC20_get_balance(address_token=address_token)
